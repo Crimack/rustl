@@ -4,3 +4,6 @@ version = "0.1.0"
 authors = ["Christopher McKee <cmckee41@qub.ac.uk>"]
 
 [dependencies]
+num-bigint='*'
+num-traits='*'
+time='*'

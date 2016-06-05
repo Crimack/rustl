@@ -5,16 +5,21 @@ and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
 
 Find the sum of the digits in the number 100!*/
 
+extern crate num_bigint;
+extern crate num_traits;
+extern crate time;
 
-// I don't know how to fix this
-// u64 is far too small to hold 100!, causing overflows and general panic
+use num_bigint::{BigInt, ToBigInt};
+use num_traits::{Zero, One};
+use time::precise_time_s;
 
-// TODO: Fix for factorials > 20
-
-fn factorial(num : u64) -> u64 {
-    if num == 0 { 1 }
+fn factorial(num : &BigInt, zero: &BigInt, one: &BigInt) -> BigInt {
+    if num == zero {
+        One::one()
+    }
     else {
-        num * factorial(num - 1)
+        let next = num - one;
+        num * factorial(&next, zero, one)
     }
 }
 
@@ -42,9 +47,15 @@ fn value_counter(fact: &str) -> i32 {
 }
 
 fn main() {
-    let factorial_number = 20;
-    let factorial_result: u64 = factorial(factorial_number);
+    let start_time = precise_time_s();
+    let factorial_number = 100;
+    let big_factorial = factorial_number.to_bigint().unwrap();
+    let zero = Zero::zero();
+    let one = One::one();
+    let factorial_result: BigInt = factorial(&big_factorial, &zero, &one);
     let character_adding_result: i32 = value_counter(&factorial_result.to_string());
+    let end_time = precise_time_s();
 
-    println!("Factorial number: {}", character_adding_result);
+
+    println!("Factorial number: {}\nTime taken: {} seconds", character_adding_result, (end_time-start_time));
 }
