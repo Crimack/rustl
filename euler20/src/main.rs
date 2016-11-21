@@ -13,35 +13,23 @@ use num_bigint::{BigInt, ToBigInt};
 use num_traits::{Zero, One};
 use time::precise_time_s;
 
-fn factorial(num : &BigInt, zero: &BigInt, one: &BigInt) -> BigInt {
-    if num == zero {
-        One::one()
+fn factorial(num: &BigInt, counter: Option<BigInt>) -> BigInt {
+    if num.is_zero() {
+        counter.unwrap()
     }
     else {
-        let next = num - one;
-        num * factorial(&next, zero, one)
+        let running_total = num * counter.unwrap_or(BigInt::one());
+        let next = num - BigInt::one();
+        factorial(&next, Some(running_total))
     }
 }
 
 
-fn value_counter(fact: &str) -> i32 {
-    let mut counter: i32 = 0;
+fn value_counter(fact: &str) -> u32 {
+    let mut counter: u32 = 0;
     for c in fact.chars() {
-        // Can't cast directly from char to int, so have to do some magic
-        let num_c = match c {
-            '0' => 0,
-            '1' => 1,
-            '2' => 2,
-            '3' => 3,
-            '4' => 4,
-            '5' => 5,
-            '6' => 6,
-            '7' => 7,
-            '8' => 8,
-            '9' => 9,
-            _ => 0,
-        };
-        counter += num_c;
+        let x = c.to_digit(10).unwrap();
+        counter += x;
     }
     counter
 }
@@ -50,10 +38,8 @@ fn main() {
     let start_time = precise_time_s();
     let factorial_number = 100;
     let big_factorial = factorial_number.to_bigint().unwrap();
-    let zero = Zero::zero();
-    let one = One::one();
-    let factorial_result: BigInt = factorial(&big_factorial, &zero, &one);
-    let character_adding_result: i32 = value_counter(&factorial_result.to_string());
+    let factorial_result: BigInt = factorial(&big_factorial, None);
+    let character_adding_result: u32 = value_counter(&factorial_result.to_string());
     let end_time = precise_time_s();
 
 
