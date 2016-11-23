@@ -80,6 +80,10 @@ fn classify_missing(target_row: &Vec<i32>, train_data: &Vec<Vec<i32>>,
         let distance = calculate_distance(target_row, row);
         answers.push(distance);
     }
+    for row in test_data {
+        let distance = calculate_distance(target_row, row);
+        answers.push(distance);
+    }
 
     answers.sort();
     let mut one_counter = 0;
